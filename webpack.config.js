@@ -1,12 +1,15 @@
 const path = require('path');
+const glob = require('glob');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: {
-    page1: './src/index.pug',
-    page2: './src/index2.pug'
-  },
+  entry: () => new Promise((resolve) => 
+    resolve(glob.sync('src/*').reduce((acc, value) => {
+      acc[value] = './' + value;
+      return acc;
+    }, {}))
+  ),
   output: {
     filename: '[name].js',
     publicPath: '/'
@@ -16,8 +19,8 @@ module.exports = {
       { test: /\.css$/, use: ['style-loader', 'css-loader'] },
       { test: /\.pug$/, use: [
         "file-loader?name=[name].html",
-        //"extract-loader",
-        //"html-loader",
+        "extract-loader",
+        "html-loader",
         "pug-html-loader"
       ] },
       { test: /\.png$/, use: ['file-loader'] },

@@ -1,0 +1,1 @@
+./node_modules/webpack/.bin/webpack.cmd *%
