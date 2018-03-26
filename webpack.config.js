@@ -1,3 +1,4 @@
+const glob = require('glob');
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -6,14 +7,27 @@ var resolve = function (local) {
   return path.join(__dirname, local);
 }
 
+var htmlWebpackPlugins = glob.sync('src/*.pug')
+  .map(value => {
+    var name = path.parse(value).name;
+    return new HtmlWebpackPlugin({
+      template: value,
+      chunks: [name],
+      filename: name + '.html'
+    }
+  )});
+
+var entries = glob.sync('./src/*.@(css|sass|scss)').reduce((acc, value) => {
+  var name = path.parse(value).name;
+  acc[name] = value;
+  return acc;
+}, {});
+
+console.log('Entries:');
+console.log(entries);
+
 module.exports = {
-  entry: {
-    page1: './src/index.pug',
-    page2: './src/index2.pug',
-  },
-  devServer: {
-    hot: true
-  },
+  entry: entries,
   module: {
     rules: [
       {
@@ -21,14 +35,12 @@ module.exports = {
         use: [ 'style-loader', 'css-loader' ]
       },
       {
-        test: /\.scss$/,
+        test: /\.s(a|c)ss$/,
         use: [ 'style-loader', 'css-loader', 'sass-loader' ]
       },
       {
         test: /\.pug$/,
         use: [ 
-          "file-loader?name=[path][name].html",
-          "extract-loader",
           "html-loader",
           "pug-html-loader"
         ]
@@ -37,6 +49,5 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist/*']),
-    new HtmlWebpackPlugin()
-  ]
+  ].concat(htmlWebpackPlugins)
 } 
