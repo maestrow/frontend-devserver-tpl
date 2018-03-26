@@ -1,4 +1,19 @@
-# 
+# PUG + SASS WebPack DevServer Configuration
+
+This is a boilerplate `webpack.config.js` processing [pug](https://pugjs.org), css and sass(http://sass-lang.com/). 
+
+
+## How to use
+
+- `npm i`
+- Place your pug templates and corresponding styles file (sass or css) in src subdir. 
+- `npm run dev`
+- Run browser and open "localhost:8080".
+
+You can navigate to any page corresponding your pug-templates in src, i.e. `localhost:8080/page.html`. Also style files with same name as pug-template attached to produced html file. Each page opens with [HMR](https://webpack.js.org/concepts/hot-module-replacement/) feature, so you can edit pug or style files and after saving browser reloads your changes.
+
+
+## Other questions
 
 ### How to save pug entry as html?
 
